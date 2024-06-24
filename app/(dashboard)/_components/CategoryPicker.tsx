@@ -1,40 +1,52 @@
 'use client';
 
-import { TransactionType } from '@/lib/types';
-import React from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { Category } from '@prisma/client';
-import { Popover, PopoverContent } from '@/components/ui/popover';
-import { PopoverTrigger } from '@radix-ui/react-popover';
+import CreateCategoryDialog from '@/app/(dashboard)/_components/CreateCategoryDialog';
 import { Button } from '@/components/ui/button';
 import {
   Command,
-  CommandInput,
   CommandEmpty,
-  CommandList,
   CommandGroup,
+  CommandInput,
   CommandItem,
+  CommandList,
 } from '@/components/ui/command';
-import { Check, ChevronsUpDown } from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { TransactionType } from '@/lib/types';
 import { cn } from '@/lib/utils';
-import CreateCategoryDialog from './CreateCategoryDialog';
+import { Category } from '@prisma/client';
+import { useQuery } from '@tanstack/react-query';
+import { Check, ChevronsUpDown } from 'lucide-react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 interface Props {
   type: TransactionType;
+  onChange: (value: string) => void;
 }
 
-function CategoryPicker({ type }: Props) {
+function CategoryPicker({ type, onChange }: Props) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState('');
 
+  useEffect(() => {
+    if (!value) return;
+    // when the value changes, call onChange callback
+    onChange(value);
+  }, [onChange, value]);
+
   const categoriesQuery = useQuery({
-    queryKey: ['categories', { type }],
-    queryFn: () => {
-      fetch('/api/categories?type=' + type).then((res) => res.json());
-    },
+    queryKey: ['categories', type],
+    queryFn: () => fetch(`/api/categories?type=${type}`).then((res) => res.json()),
   });
 
   const selectedCategory = categoriesQuery.data?.find((category: Category) => category.name === value);
+
+  const successCallback = useCallback(
+    (category: Category) => {
+      setValue(category.name);
+      setOpen((prev) => !prev);
+    },
+    [setValue, setOpen]
+  );
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -45,7 +57,7 @@ function CategoryPicker({ type }: Props) {
           aria-expanded={open}
           className="w-[200px] justify-between"
         >
-          {selectedCategory ? <CategoryRow category={selectedCategory} /> : 'Select category'}
+          {selectedCategory ? <CategoryRow category={selectedCategory} /> : 'Chọn danh mục'}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -58,8 +70,8 @@ function CategoryPicker({ type }: Props) {
           <CommandInput placeholder="Search category..." />
           <CreateCategoryDialog type={type} successCallback={successCallback} />
           <CommandEmpty>
-            <p>Category not found</p>
-            <p className="text-xs text-muted-foreground">Tip: Create a new category</p>
+            <p>Không có danh mục nào</p>
+            <p className="text-xs text-muted-foreground">Mẹo: Tạo 1 danh mục mới</p>
           </CommandEmpty>
           <CommandGroup>
             <CommandList>
@@ -86,6 +98,8 @@ function CategoryPicker({ type }: Props) {
   );
 }
 
+export default CategoryPicker;
+
 function CategoryRow({ category }: { category: Category }) {
   return (
     <div className="flex items-center gap-2">
@@ -94,4 +108,3 @@ function CategoryRow({ category }: { category: Category }) {
     </div>
   );
 }
-export default CategoryPicker;

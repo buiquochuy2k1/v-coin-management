@@ -11,12 +11,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { TransactionType } from '@/lib/types';
 import { cn } from '@/lib/utils';
-import { CreateCategorySchema, CreateCategorySchemaType } from '@/schema/categories';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CircleOff, Loader2, PlusSquare } from 'lucide-react';
 import React, { ReactNode, useCallback, useState } from 'react';
@@ -28,6 +28,7 @@ import { CreateCategory } from '@/app/(dashboard)/_actions/categories';
 import { Category } from '@prisma/client';
 import { toast } from 'sonner';
 import { useTheme } from 'next-themes';
+import { CreateCategorySchema, CreateCategorySchemaType } from '@/lib/categories';
 
 interface Props {
   type: TransactionType;
@@ -56,7 +57,7 @@ function CreateCategoryDialog({ type, successCallback, trigger }: Props) {
         type,
       });
 
-      toast.success(`Category ${data.name} created successfully 🎉`, {
+      toast.success(`Danh mục ${data.name} được tạo thành công 🎉`, {
         id: 'create-category',
       });
 
@@ -69,7 +70,7 @@ function CreateCategoryDialog({ type, successCallback, trigger }: Props) {
       setOpen((prev) => !prev);
     },
     onError: () => {
-      toast.error('Something went wrong', {
+      toast.error('Đã có lỗi xảy ra', {
         id: 'create-category',
       });
     },
@@ -77,7 +78,7 @@ function CreateCategoryDialog({ type, successCallback, trigger }: Props) {
 
   const onSubmit = useCallback(
     (values: CreateCategorySchemaType) => {
-      toast.loading('Creating category...', {
+      toast.loading('Đang tạo danh mục...', {
         id: 'create-category',
       });
       mutate(values);
@@ -96,18 +97,18 @@ function CreateCategoryDialog({ type, successCallback, trigger }: Props) {
             className="flex border-separate items-center justify-start roudned-none border-b px-3 py-3 text-muted-foreground"
           >
             <PlusSquare className="mr-2 h-4 w-4" />
-            Create new
+            Tạo mới
           </Button>
         )}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            Create
+            Tạo
             <span className={cn('m-1', type === 'income' ? 'text-emerald-500' : 'text-red-500')}>{type}</span>
-            category
+            danh mục
           </DialogTitle>
-          <DialogDescription>Categories are used to group your transactions</DialogDescription>
+          <DialogDescription>Danh mục được sử dụng để nhóm các giao dịch của bạn</DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -116,11 +117,11 @@ function CreateCategoryDialog({ type, successCallback, trigger }: Props) {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>Tên danh mục</FormLabel>
                   <FormControl>
-                    <Input placeholder="Category" {...field} />
+                    <Input placeholder="Danh mục" {...field} />
                   </FormControl>
-                  <FormDescription>This is how your category will appear in the app</FormDescription>
+                  <FormDescription>Đây là cách danh mục của bạn sẽ xuất hiện trong ứng dụng</FormDescription>
                 </FormItem>
               )}
             />
@@ -140,12 +141,12 @@ function CreateCategoryDialog({ type, successCallback, trigger }: Props) {
                               <span className="text-5xl" role="img">
                                 {field.value}
                               </span>
-                              <p className="text-xs text-muted-foreground">Click to change</p>
+                              <p className="text-xs text-muted-foreground">Bấm để thay đổi</p>
                             </div>
                           ) : (
                             <div className="flex flex-col items-center gap-2">
                               <CircleOff className="h-[48px] w-[48px]" />
-                              <p className="text-xs text-muted-foreground">Click to select</p>
+                              <p className="text-xs text-muted-foreground">Bấm để thay đổi</p>
                             </div>
                           )}
                         </Button>
@@ -161,7 +162,7 @@ function CreateCategoryDialog({ type, successCallback, trigger }: Props) {
                       </PopoverContent>
                     </Popover>
                   </FormControl>
-                  <FormDescription>This is how your category will appear in the app</FormDescription>
+                  <FormDescription>Đây là cách danh mục của bạn sẽ xuất hiện trong ứng dụng</FormDescription>
                 </FormItem>
               )}
             />
