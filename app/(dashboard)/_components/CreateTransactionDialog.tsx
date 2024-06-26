@@ -207,11 +207,11 @@ function CreateTransactionDialog({ trigger, type }: Props) {
                 form.reset();
               }}
             >
-              Cancel
+              Huỷ
             </Button>
           </DialogClose>
           <Button onClick={form.handleSubmit(onSubmit)} disabled={isPending}>
-            {!isPending && 'Create'}
+            {!isPending && 'Tạo'}
             {isPending && <Loader2 className="animate-spin" />}
           </Button>
         </DialogFooter>

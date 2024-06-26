@@ -21,9 +21,9 @@ function Navbar() {
 }
 
 const items = [
-  { label: 'Dashboard', link: '/' },
-  { label: 'Transactions', link: '/transactions' },
-  { label: 'Manage', link: '/manage' },
+  { label: 'Trang chủ', link: '/' },
+  { label: 'Lịch sử', link: '/transactions' },
+  { label: 'Quản lý', link: '/manage' },
 ];
 
 function MobileNavBar() {
