@@ -4,14 +4,14 @@ import { DateRangePicker } from '@/components/ui/date-range-picker';
 import { MAX_DATE_RANGE_DAYS } from '@/lib/constants';
 import { UserSettings } from '@prisma/client';
 import { toast } from 'sonner';
-import { differenceInDays } from 'date-fns';
+import { differenceInDays, startOfMonth } from 'date-fns';
 import React from 'react';
 import StatesCards from './StatsCards';
 import CategoriesStats from './CategoriesStats';
 
 function Overview({ userSettings }: { userSettings: UserSettings }) {
   const [dateRange, setDateRange] = React.useState<{ from: Date; to: Date }>({
-    from: new Date(),
+    from: startOfMonth(new Date()),
     to: new Date(),
   });
 

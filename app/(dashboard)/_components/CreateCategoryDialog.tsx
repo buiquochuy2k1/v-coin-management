@@ -28,7 +28,7 @@ import { CreateCategory } from '@/app/(dashboard)/_actions/categories';
 import { Category } from '@prisma/client';
 import { toast } from 'sonner';
 import { useTheme } from 'next-themes';
-import { CreateCategorySchema, CreateCategorySchemaType } from '@/lib/categories';
+import { CreateCategorySchema, CreateCategorySchemaType } from '@/schema/categories';
 
 interface Props {
   type: TransactionType;
@@ -104,9 +104,10 @@ function CreateCategoryDialog({ type, successCallback, trigger }: Props) {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            Tạo
-            <span className={cn('m-1', type === 'income' ? 'text-emerald-500' : 'text-red-500')}>{type}</span>
-            danh mục
+            Tạo danh mục
+            <span className={cn('m-1', type === 'income' ? 'text-emerald-500' : 'text-red-500')}>
+              {type === 'income' ? 'thu nhập' : 'chi tiêu'}
+            </span>
           </DialogTitle>
           <DialogDescription>Danh mục được sử dụng để nhóm các giao dịch của bạn</DialogDescription>
         </DialogHeader>
